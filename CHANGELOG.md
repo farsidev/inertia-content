@@ -7,17 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2025-12-29
+
+**Release Candidate 1** - Production-ready with standard Vite workflow
+
 ### Fixed
 - **Critical**: Completely rewrote build approach using standard Vite workflow
 - Compile Markdown to actual Vue files in `resources/js/.content-compiled/`
 - Use Vite's glob imports instead of virtual modules for reliability
 - Content chunks now properly bundled by Vite in both dev and production
 - HMR works seamlessly with real Vue files
+- Production builds work correctly without any hacks
 
 ### Changed
 - **Breaking**: Switched from virtual modules to real compiled Vue files
 - Import mechanism now uses Vite glob imports (standard and reliable)
 - Simplified plugin code - removed complex virtual module handling
+- Architecture now follows Vite best practices
+
+### Improved
+- Better error logging and debugging
+- More reliable HMR updates
+- Standard Vite code splitting and tree shaking
+- Cleaner codebase
+
+### Added
+- Build approaches documentation
+- Production build fix documentation
+- Packagist webhook setup guide
+
+## [1.0.0-beta.3] - 2025-12-29
+
+**Deprecated** - Experimental approach, use RC.1 instead
 
 ## [1.0.0-beta.2] - 2025-12-29
 

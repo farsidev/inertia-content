@@ -8,6 +8,8 @@
 
 A **Nuxt Content-compatible** content management system for Laravel + Inertia.js + Vue applications. Write Markdown, get Vue components, query with Laravel – all with build-time compilation and zero runtime overhead.
 
+**Latest Version**: `v1.0.0-beta.2` (Beta - Testing Phase)
+
 ## Why Inertia Content?
 
 Traditional CMS solutions force you to pass HTML through Inertia props or parse Markdown at runtime. Inertia Content takes a different approach: **compile Markdown to Vue components at build time**, while Laravel maintains full control over routing and access.

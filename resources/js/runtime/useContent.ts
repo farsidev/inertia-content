@@ -73,7 +73,7 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
       component.value = null
       meta.value = null
       headings.value = []
-      
+
       // Log error for debugging
       if (import.meta.env.DEV) {
         console.error('[inertia-content] Error loading content:', {

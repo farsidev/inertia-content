@@ -31,14 +31,14 @@ Different approaches to handle Markdown compilation in Inertia Content.
 // vite/plugin.ts
 buildStart() {
   const outputDir = path.join(config.root, 'resources/js/.content-compiled')
-  
+
   // Compile markdown to .vue files
   for (const [contentPath, entry] of compiledEntries) {
     const vueFilePath = path.join(outputDir, `${contentPath}.vue`)
     fs.mkdirSync(path.dirname(vueFilePath), { recursive: true })
     fs.writeFileSync(vueFilePath, entry.vueComponent)
   }
-  
+
   // Write manifest module
   const manifestPath = path.join(outputDir, '_manifest.ts')
   fs.writeFileSync(manifestPath, generateManifestCode(manifest))
@@ -56,7 +56,7 @@ const contentModules = import.meta.glob(
 async function load() {
   const modulePath = `/resources/js/.content-compiled/${path}.vue`
   const loader = contentModules[modulePath]
-  
+
   if (loader) {
     const module = await loader()
     component.value = module.default
@@ -92,7 +92,7 @@ export default function inertiaContentPreprocess() {
   return {
     name: 'vite-plugin-inertia-content-preprocess',
     enforce: 'pre',  // قبل از بقیه plugins
-    
+
     configResolved(config) {
       // Compile all markdown before Vite processes files
       compileAllMarkdownToVueFiles(config.root)
@@ -118,7 +118,7 @@ export default function inertiaContentPreprocess() {
 export default function inertiaContent() {
   return {
     name: 'vite-plugin-inertia-content',
-    
+
     transform(code, id) {
       // فایل‌های .md در content directory رو transform کن
       if (id.endsWith('.md') && id.includes('/content/')) {
@@ -172,20 +172,20 @@ import IntroContent from '@/content/intro.md'
 export default function inertiaContent(options = {}) {
   const contentDir = options.contentDir || 'resources/content'
   const compiledDir = 'resources/js/.content-compiled'
-  
+
   return {
     name: 'vite-plugin-inertia-content',
-    
+
     configResolved(config) {
       // Compile markdown to Vue files
       compileMarkdownToVueFiles(contentDir, compiledDir)
     },
-    
+
     handleHotUpdate({ file, server }) {
       if (file.endsWith('.md') && file.includes(contentDir)) {
         // Recompile changed file
         recompileSingleFile(file, compiledDir)
-        
+
         // Trigger HMR
         const vueFile = convertMdPathToVuePath(file, contentDir, compiledDir)
         const mod = server.moduleGraph.getModuleById(vueFile)
@@ -194,7 +194,7 @@ export default function inertiaContent(options = {}) {
         }
       }
     },
-    
+
     closeBundle() {
       // Clean up compiled files after build
       if (fs.existsSync(compiledDir)) {
@@ -218,14 +218,14 @@ export function useContent(key: string) {
   const load = async () => {
     const modulePath = `/resources/js/.content-compiled/${key}.vue`
     const loader = contentModules[modulePath]
-    
+
     if (loader) {
       const module = await loader()
       component.value = module.default
       meta.value = module.meta
     }
   }
-  
+
   // ...
 }
 ```
@@ -278,7 +278,7 @@ resources/js/.content-compiled/
 export default function inertiaContent() {
   return {
     name: 'vite-plugin-inertia-content',
-    
+
     // .md files رو مثل .vue handle کن
     transform(code, id) {
       if (id.endsWith('.md') && id.includes('/content/')) {
@@ -328,4 +328,3 @@ const contentFiles = import.meta.glob('~/content/**/*.md')
 3. Verify chunks created
 4. Tag v1.0.0-beta.4
 5. Production ready! ✅
-

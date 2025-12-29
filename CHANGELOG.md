@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-alpha] - 2025-12-29
+
+**Status**: Alpha release - Code complete, needs testing
+
+This is the initial alpha release of Inertia Content. The package is feature-complete but has not been tested in production environments.
+
 ### Added
 - Initial package structure
 - File-based content management with Markdown
@@ -65,10 +71,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Notes
 
-**Status**: Not yet released
-**First Release**: Coming soon
+### [1.0.0-alpha] - December 29, 2025
 
-This package is currently in final testing phase before initial release.
+**First alpha release!** 🎉
+
+This release includes complete implementation of core features but requires testing before production use.
+
+**Installation (Alpha):**
+```bash
+composer require farsi/inertia-content:@dev
+```
+
+**⚠️ Warning**: This is an alpha release. Not recommended for production use.
 
 ---
 

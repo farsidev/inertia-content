@@ -48,21 +48,20 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
         throw new Error(`Content not found: ${path}`)
       }
 
-      // In development: use virtual modules
-      // In production: use physical files from temp directory
       let module
-
+      
       if (import.meta.env.DEV) {
-        // Development: virtual modules work
+        // Development: use virtual modules (HMR)
         module = await import(
           /* @vite-ignore */
           `virtual:inertia-content/entry/${path}`
         )
       } else {
-        // Production: load from physical files
+        // Production: load from emitted chunk file
+        const chunkPath = `/build/assets/${entry.chunk}`
         module = await import(
           /* @vite-ignore */
-          `/node_modules/.vite-inertia-content/${path}.vue`
+          chunkPath
         )
       }
 
@@ -74,6 +73,13 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
       component.value = null
       meta.value = null
       headings.value = []
+      
+      // Log error for debugging
+      console.error('[inertia-content] Error loading content:', {
+        path,
+        error: e,
+        entry: manifest.entries[path]
+      })
     } finally {
       isLoading.value = false
     }

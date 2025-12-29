@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Critical**: Fixed production build not emitting content chunk files
+- Changed approach from writing temp files to using Vite's emitFile API
+- Dynamic imports now correctly load from `/build/assets/content-{hash}.js` in production
+- Removed unnecessary temp directory approach
+
 ## [1.0.0-beta.2] - 2025-12-29
 
 ### Added

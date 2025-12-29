@@ -2,9 +2,9 @@
 
 ## 🐛 Critical: Virtual Modules Not Emitted in Production Build
 
-**Status**: 🔴 **CRITICAL** - Blocks production use  
-**Reported**: December 29, 2025  
-**Affects**: v1.0.0-alpha  
+**Status**: 🔴 **CRITICAL** - Blocks production use
+**Reported**: December 29, 2025
+**Affects**: v1.0.0-alpha
 **Priority**: P0 - Must fix before beta
 
 ### Problem
@@ -77,7 +77,7 @@ Generate actual files instead of virtual modules:
 ```typescript
 buildStart() {
   const tempDir = path.join(config.root, 'node_modules/.inertia-content')
-  
+
   for (const [path, entry] of compiledEntries) {
     const filePath = path.join(tempDir, `${path}.js`)
     fs.writeFileSync(filePath, entry.vueComponent)
@@ -101,7 +101,7 @@ const contentModules = import.meta.glob('/resources/content/**/*.md', {
 export function useContent(key: string) {
   const modulePath = `/resources/content/${key}.md`
   const loader = contentModules[modulePath]
-  
+
   if (loader) {
     const module = await loader()
     component.value = module.default
@@ -140,7 +140,7 @@ const components = import.meta.glob(
 async function load() {
   const modulePath = `/node_modules/.vite/inertia-content/${path}.vue`
   const loader = components[modulePath]
-  
+
   if (loader) {
     component.value = await loader()
   }
@@ -170,11 +170,11 @@ closeBundle() {
 public function page(string $path, ?string $component = null): Response
 {
     $entry = $this->findOrFail($path);
-    
+
     // Temporary: Render markdown server-side
     $parser = new \Parsedown();
     $html = $parser->text($entry->getBody()); // Need to add getBody()
-    
+
     return Inertia::render($component, [
         'contentKey' => $entry->getPath(),
         'contentMeta' => $entry->getMeta(),
@@ -238,7 +238,6 @@ php artisan serve
 
 ---
 
-**Status**: 🔴 **BLOCKING**  
-**Severity**: Critical  
+**Status**: 🔴 **BLOCKING**
+**Severity**: Critical
 **Next**: Implement fix immediately
-

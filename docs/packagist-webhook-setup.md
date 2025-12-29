@@ -286,4 +286,3 @@ Packagist uses these IPs (if you have firewall):
 ```
 
 **After setup, releasing = just push tags!** 🚀
-

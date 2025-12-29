@@ -70,15 +70,15 @@ With webhook, Packagist auto-updates when you push tags.
 2. **Click "Add webhook"**
 
 3. **Configure webhook:**
-   - **Payload URL**: 
+   - **Payload URL**:
      ```
      https://packagist.org/api/github?username=YOUR_PACKAGIST_USERNAME&apiToken=YOUR_API_TOKEN
      ```
-   
+
    - **Content type**: `application/json`
-   
+
    - **Which events?**: Select "Just the push event"
-   
+
    - **Active**: ✅ Check this
 
 4. **Click "Add webhook"**
@@ -206,8 +206,8 @@ curl -X POST "https://packagist.org/api/github?username=USERNAME&apiToken=TOKEN"
 
 ### v1.0.0-beta.1
 
-**Tag**: ✅ Created and pushed  
-**GitHub**: ✅ Available  
+**Tag**: ✅ Created and pushed
+**GitHub**: ✅ Available
 **Packagist**: ⏳ Pending submission
 
 **To install (after Packagist submission):**
@@ -231,7 +231,7 @@ We have a GitHub Action that can help (already configured):
 # .github/workflows/release.yml
 # Triggers on tag push (v*.*.*)
 # - Validates tag
-# - Runs tests  
+# - Runs tests
 # - Creates GitHub release
 # - Notifies Packagist (if webhook fails)
 ```
@@ -274,6 +274,5 @@ curl -X POST "https://packagist.org/api/update-package?username=USER&apiToken=TO
 
 ---
 
-**Last Updated**: December 29, 2025  
+**Last Updated**: December 29, 2025
 **Current Version**: v1.0.0-beta.1
-

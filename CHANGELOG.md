@@ -7,10 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.1] - 2025-12-29
+
 ### Fixed
-- Fixed critical bug where virtual modules weren't emitted in production build
-- Content entries now written to temporary directory for production builds
-- Dynamic imports now work correctly in production mode
+- **Critical**: Fixed virtual modules not emitting in production build
+- Content entries now written to temporary directory (`node_modules/.vite-inertia-content/`) during production builds
+- Dynamic imports work correctly in both development and production modes
+- Added cleanup hook to remove temporary files after build
+
+### Changed
+- useContent composable now uses conditional imports (virtual modules in dev, physical files in prod)
+- Improved build process logging
+
+### Documentation
+- Added production build fix documentation
+- Added known bugs documentation
+- Updated installation guide with dependency installation steps
 
 ## [1.0.0-alpha] - 2025-12-29
 

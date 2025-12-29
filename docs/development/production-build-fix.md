@@ -8,7 +8,7 @@ Virtual modules don't work in production build - Vite doesn't emit them as physi
 
 ### Hybrid Approach
 
-**Development**: Use virtual modules (fast HMR)  
+**Development**: Use virtual modules (fast HMR)
 **Production**: Write to temporary directory, import real files
 
 ### How It Works
@@ -19,7 +19,7 @@ Virtual modules don't work in production build - Vite doesn't emit them as physi
 // 1. Scan and compile markdown
 buildStart() {
   compiledEntries = scanAndCompile(...)
-  
+
   // 2. Write to temp directory for production
   if (config.command === 'build') {
     writeVirtualModulesToDisk(
@@ -64,10 +64,10 @@ closeBundle() {
 
 ## Benefits
 
-✅ Development: Fast HMR with virtual modules  
-✅ Production: Reliable with real files  
-✅ No runtime parsing needed  
-✅ Vite bundles everything correctly  
+✅ Development: Fast HMR with virtual modules
+✅ Production: Reliable with real files
+✅ No runtime parsing needed
+✅ Vite bundles everything correctly
 
 ---
 
@@ -108,7 +108,6 @@ npm run preview
 
 ---
 
-**Status**: Implemented  
-**Testing**: Required  
+**Status**: Implemented
+**Testing**: Required
 **Impact**: Fixes critical production bug
-

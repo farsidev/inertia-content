@@ -45,7 +45,7 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
 
       if (config.command === 'build') {
         console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries`)
-        
+
         // Write virtual modules to physical files for production build
         writeVirtualModulesToDisk(compiledEntries, virtualModulesDir)
       }

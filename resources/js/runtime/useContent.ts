@@ -51,7 +51,7 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
       // In development: use virtual modules
       // In production: use physical files from temp directory
       let module
-      
+
       if (import.meta.env.DEV) {
         // Development: virtual modules work
         module = await import(

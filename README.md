@@ -28,14 +28,19 @@ Traditional CMS solutions force you to pass HTML through Inertia props or parse 
 Inertia Content is a **single Composer package** that includes both PHP and JavaScript code.
 
 ```bash
-# Install via Composer
+# 1. Install via Composer
 composer require farsi/inertia-content
 
-# Run installer
+# 2. Install JavaScript dependencies (IMPORTANT!)
+cd vendor/farsi/inertia-content && npm install && cd -
+
+# 3. Run installer
 php artisan inertia-content:install
 ```
 
-That's it! The JavaScript/Vue components are included in the Composer package.
+The JavaScript/Vue components are TypeScript source files that **your Vite will compile** - no pre-built JavaScript.
+
+📖 See [How It Works](./docs/how-it-works.md) for detailed explanation.
 
 ## Setup
 
@@ -323,15 +328,38 @@ Vue handles:
 | **HMR** | ✅ Yes | ⚠️ Sometimes | ✅ Yes |
 | **Server Authority** | ✅ Complete | ✅ Complete | ❌ No server |
 
+## Nuxt Content Compatibility
+
+This package implements **80% of Nuxt Content v2 core features**, adapted for Laravel + Inertia:
+
+✅ **Implemented:**
+- Query API (`Content::query()` ≈ `queryContent()`)
+- Markdown parsing with frontmatter
+- Heading extraction & TOC
+- Navigation generation
+- HMR support
+- Vue components
+- TypeScript support
+
+⏳ **Planned for v1.1:**
+- MDC (Markdown Components)
+- Full-text search
+- Syntax highlighting (Shiki)
+- YAML/JSON file support
+
+See [Nuxt Content Comparison](./docs/nuxt-content-comparison.md) for detailed feature parity analysis.
+
 ## Roadmap
 
 - [x] Markdown compilation
-- [x] Query API
+- [x] Query API (Nuxt Content-compatible)
 - [x] Vue components
 - [x] HMR support
 - [x] TypeScript support
 - [ ] MDC (Markdown Components) - v1.1
 - [ ] Full-text search - v1.1
+- [ ] Shiki syntax highlighting - v1.1
+- [ ] YAML/JSON support - v1.1
 - [ ] Content versioning - v1.2
 - [ ] Multi-language support - v1.2
 

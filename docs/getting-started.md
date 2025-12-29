@@ -5,10 +5,13 @@ Get up and running with Inertia Content in 5 minutes.
 ## Installation
 
 ```bash
-# Install package
+# 1. Install package
 composer require farsi/inertia-content
 
-# Run installer
+# 2. Install JavaScript dependencies
+cd vendor/farsi/inertia-content && npm install && cd -
+
+# 3. Run installer
 php artisan inertia-content:install
 ```
 

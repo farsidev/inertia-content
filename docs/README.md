@@ -7,6 +7,7 @@ Complete documentation for Inertia Content.
 ### 🚀 Getting Started (Start Here!)
 - [**Quick Start**](./getting-started.md) - Get started in 5 minutes ⭐
 - [**Installation**](./installation.md) - Step-by-step installation
+- [**How It Works**](./how-it-works.md) - Understanding the package
 - [**Configuration**](./configuration.md) - All configuration options
 
 ### 📖 Usage Guides
@@ -21,9 +22,11 @@ Complete documentation for Inertia Content.
 ### 🏗️ Architecture & Design
 - [**Package Structure**](./structure.md) - File organization
 - [**Architecture**](./architecture.md) - Technical design
+- [**Nuxt Content Comparison**](./nuxt-content-comparison.md) - Feature parity analysis
 - [**Security Policy**](./security.md) - Security guidelines
 
 ### 🔧 For Maintainers
+- [**Testing Guide**](./testing-guide.md) - Manual testing checklist
 - [**Publishing Guide**](./publishing.md) - How to release new versions
 - [**Development Docs**](./development/) - Implementation details
 

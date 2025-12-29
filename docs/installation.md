@@ -15,7 +15,17 @@
 composer require farsi/inertia-content
 ```
 
-### 2. Run Install Command
+### 2. Install JavaScript Dependencies
+
+**Important:** The package includes TypeScript source that needs dependencies:
+
+```bash
+cd vendor/farsi/inertia-content
+npm install
+cd ../../..
+```
+
+### 3. Run Install Command
 
 ```bash
 php artisan inertia-content:install

@@ -39,7 +39,11 @@
     },
     "scripts": {
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test-coverage": "vendor/bin/pest --coverage",
+        "post-install-cmd": [
+            "@php -r \"file_exists('resources/js/node_modules') || mkdir('resources/js/node_modules', 0755, true);\"",
+            "@php -r \"echo 'Run: cd vendor/farsi/inertia-content && npm install (if developing)\\n';\""
+        ]
     },
     "config": {
         "sort-packages": true,

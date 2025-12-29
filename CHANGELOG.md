@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.2] - 2025-12-29
+
+### Added
+- Laravel 12 support
+- Inertia.js 2.x support
+
+### Improved
+- Extended PHP version support matrix in CI
+- Updated test workflows to include Laravel 12
+
+### Compatibility
+- PHP: 8.1, 8.2, 8.3
+- Laravel: 10.x, 11.x, 12.x
+- Inertia.js: 1.x, 2.x
+
 ## [1.0.0-beta.1] - 2025-12-29
 
 ### Fixed

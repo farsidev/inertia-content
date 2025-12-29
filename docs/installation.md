@@ -3,9 +3,9 @@
 ## Requirements
 
 - PHP 8.1 or higher
-- Laravel 10.x or 11.x
+- Laravel 10.x, 11.x, or 12.x
 - Node.js 18 or higher
-- Inertia.js with Vue 3
+- Inertia.js 1.x or 2.x with Vue 3
 
 ## Installation
 

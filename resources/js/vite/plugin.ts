@@ -76,7 +76,44 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
       }
     },
 
+    closeBundle() {
+      // Clean up compiled Vue files after build
+      if (config.command === 'build' && fs.existsSync(compiledDirPath)) {
+        fs.rmSync(compiledDirPath, { recursive: true, force: true })
+        console.log(`[inertia-content] Cleaned up compiled files`)
+      }
+    },
   }
+}
+
+/**
+ * Write compiled markdown to actual Vue files on disk
+ */
+function writeCompiledFilesToDisk(
+  entries: Map<string, CompiledEntry>,
+  outputDir: string,
+  manifest: ContentManifest
+): void {
+  // Clean existing directory
+  if (fs.existsSync(outputDir)) {
+    fs.rmSync(outputDir, { recursive: true })
+  }
+
+  fs.mkdirSync(outputDir, { recursive: true })
+
+  // Write each entry as a .vue file
+  for (const [contentPath, entry] of entries) {
+    const vueFilePath = path.join(outputDir, `${contentPath}.vue`)
+    const dirPath = path.dirname(vueFilePath)
+
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true })
+    }
+
+    fs.writeFileSync(vueFilePath, entry.vueComponent)
+  }
+
+  console.log(`[inertia-content] Written ${entries.size} Vue files to ${outputDir}`)
 }
 
 /**

@@ -17,6 +17,7 @@ interface CompiledEntry {
 export function setupHMR(
   server: ViteDevServer,
   contentDir: string,
+  compiledDir: string,
   options: InertiaContentOptions,
   compiledEntries: Map<string, CompiledEntry>,
   manifest: ContentManifest,
@@ -38,7 +39,7 @@ export function setupHMR(
 
   watcher.on('change', async (relativePath) => {
     const filePath = path.join(absoluteContentDir, relativePath)
-    await handleFileChange(filePath, 'change', server, options, compiledEntries, manifest, contentDir)
+    await handleFileChange(filePath, 'change', server, options, compiledEntries, manifest, contentDir, compiledDir)
   })
 
   watcher.on('unlink', async (relativePath) => {
@@ -62,7 +63,8 @@ async function handleFileChange(
   options: InertiaContentOptions,
   compiledEntries: Map<string, CompiledEntry>,
   manifest: ContentManifest,
-  contentDir: string
+  contentDir: string,
+  compiledDir: string
 ): Promise<void> {
   try {
     // Recompile the file
@@ -80,31 +82,27 @@ async function handleFileChange(
       chunk: `content-${compiled.meta._hash}.js`,
     }
 
-    // Invalidate virtual modules
-    const manifestModuleId = '\0virtual:inertia-content/manifest'
-    const entryModuleId = `\0virtual:inertia-content/entry/${contentPath}`
+    // Write updated Vue file
+    const vueFilePath = path.join(compiledDir, `${contentPath}.vue`)
+    const dirPath = path.dirname(vueFilePath)
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true })
+    }
+    fs.writeFileSync(vueFilePath, compiled.vueComponent)
 
+    // Invalidate manifest module
+    const manifestModuleId = '\0virtual:inertia-content/manifest'
     const manifestModule = server.moduleGraph.getModuleById(manifestModuleId)
     if (manifestModule) {
       server.moduleGraph.invalidateModule(manifestModule)
     }
 
-    const entryModule = server.moduleGraph.getModuleById(entryModuleId)
-    if (entryModule) {
-      server.moduleGraph.invalidateModule(entryModule)
+    // Invalidate the Vue file module (for HMR)
+    const vueModule = server.moduleGraph.getModuleById(vueFilePath)
+    if (vueModule) {
+      server.moduleGraph.invalidateModule(vueModule)
+      server.reloadModule(vueModule)
     }
-
-    // Send HMR update to clients
-    server.ws.send({
-      type: 'custom',
-      event: 'inertia-content:update',
-      data: {
-        type,
-        path: contentPath,
-        entry: manifest.entries[contentPath],
-        timestamp: Date.now(),
-      },
-    })
 
     console.log(`[inertia-content] ${type === 'add' ? 'Added' : 'Updated'}: ${contentPath}`)
   } catch (error) {

@@ -12,7 +12,13 @@ import type { ContentEntry, Heading } from './types'
 
 // Import virtual manifest module
 // @ts-expect-error - virtual module
-import { manifest } from 'virtual:inertia-content/manifest'
+import { manifest, compiledDir } from 'virtual:inertia-content/manifest'
+
+// Import all compiled content Vue files using glob
+const contentModules = import.meta.glob<any>(
+  '/resources/js/.content-compiled/**/*.vue',
+  { eager: false }
+)
 
 interface UseContentReturn {
   component: ShallowRef<any | null>
@@ -48,26 +54,20 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
         throw new Error(`Content not found: ${path}`)
       }
 
-      let module
-      
-      if (import.meta.env.DEV) {
-        // Development: use virtual modules (HMR)
-        module = await import(
-          /* @vite-ignore */
-          `virtual:inertia-content/entry/${path}`
-        )
-      } else {
-        // Production: load from emitted chunk file
-        const chunkPath = `/build/assets/${entry.chunk}`
-        module = await import(
-          /* @vite-ignore */
-          chunkPath
-        )
+      // Use glob imports to load compiled Vue files
+      // Vite handles both dev and prod correctly
+      const modulePath = `/${compiledDir}/${path}.vue`
+      const loader = contentModules[modulePath]
+
+      if (!loader) {
+        throw new Error(`Content module not found: ${modulePath}`)
       }
 
+      const module = await loader()
+
       component.value = module.default
-      meta.value = module.meta
-      headings.value = module.headings || []
+      meta.value = module.meta || entry.meta
+      headings.value = module.headings || entry.meta._headings || []
     } catch (e) {
       error.value = e as Error
       component.value = null
@@ -75,11 +75,13 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
       headings.value = []
       
       // Log error for debugging
-      console.error('[inertia-content] Error loading content:', {
-        path,
-        error: e,
-        entry: manifest.entries[path]
-      })
+      if (import.meta.env.DEV) {
+        console.error('[inertia-content] Error loading content:', {
+          path: unref(key),
+          error: e,
+          availableModules: Object.keys(contentModules)
+        })
+      }
     } finally {
       isLoading.value = false
     }

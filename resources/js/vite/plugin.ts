@@ -23,19 +23,20 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
   const contentDir = options.contentDir || 'resources/content'
   const manifestPath = options.manifestPath || 'public/build/inertia-content-manifest.json'
   const ignore = options.ignore || ['**/.*', '**/_*', '**/node_modules/**']
+  const compiledDir = 'resources/js/.content-compiled'
 
   let config: ResolvedConfig
   let manifest: ContentManifest
   let compiledEntries: Map<string, CompiledEntry>
   let server: ViteDevServer | undefined
-  let virtualModulesDir: string
+  let compiledDirPath: string
 
   return {
     name: 'vite-plugin-inertia-content',
 
     configResolved(resolvedConfig) {
       config = resolvedConfig
-      virtualModulesDir = path.join(config.root, 'node_modules/.vite-inertia-content')
+      compiledDirPath = path.join(config.root, compiledDir)
     },
 
     buildStart() {
@@ -43,57 +44,34 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
       compiledEntries = scanAndCompile(contentDir, options, ignore)
       manifest = generateManifest(compiledEntries)
 
-      if (config.command === 'build') {
-        console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries`)
-      }
+      // Write compiled Vue files to disk
+      writeCompiledFilesToDisk(compiledEntries, compiledDirPath, manifest)
+
+      console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries`)
     },
 
     resolveId(id) {
       if (id === VIRTUAL_MANIFEST) {
         return '\0' + VIRTUAL_MANIFEST
       }
-      if (id.startsWith(VIRTUAL_ENTRY_PREFIX)) {
-        return '\0' + id
-      }
     },
 
     load(id) {
       if (id === '\0' + VIRTUAL_MANIFEST) {
-        return generateManifestModule(manifest)
-      }
-      if (id.startsWith('\0' + VIRTUAL_ENTRY_PREFIX)) {
-        const contentPath = id.slice(('\0' + VIRTUAL_ENTRY_PREFIX).length)
-        const entry = compiledEntries.get(contentPath)
-        if (entry) {
-          return entry.vueComponent
-        }
+        return generateManifestModule(manifest, compiledDir)
       }
     },
 
     configureServer(devServer) {
       server = devServer
-      setupHMR(devServer, contentDir, options, compiledEntries, manifest, ignore)
+      setupHMR(devServer, contentDir, compiledDir, options, compiledEntries, manifest, ignore)
     },
 
-    generateBundle(options, bundle) {
-      // Emit content chunks as physical files
+    generateBundle() {
+      // Write manifest to file
       if (config.command === 'build') {
-        for (const [contentPath, entry] of compiledEntries) {
-          const chunkId = `content-${entry.meta._hash}`
-          
-          // Emit each content entry as a separate chunk
-          this.emitFile({
-            type: 'chunk',
-            id: `\0${VIRTUAL_ENTRY_PREFIX}${contentPath}`,
-            fileName: `assets/${chunkId}.js`,
-            name: chunkId
-          })
-        }
-
-        // Write manifest to file
         const outputPath = path.resolve(config.root, manifestPath)
         writeManifest(manifest, outputPath)
-        console.log(`[inertia-content] Emitted ${compiledEntries.size} content chunks`)
         console.log(`[inertia-content] Manifest written to ${outputPath}`)
       }
     },
@@ -133,10 +111,11 @@ function scanAndCompile(
 /**
  * Generate the virtual manifest module code
  */
-function generateManifestModule(manifest: ContentManifest): string {
+function generateManifestModule(manifest: ContentManifest, compiledDir: string): string {
   return `
 export const manifest = ${JSON.stringify(manifest, null, 2)}
 export const version = "${manifest.version}"
+export const compiledDir = "${compiledDir}"
 
 export function getEntry(path) {
   return manifest.entries[path]

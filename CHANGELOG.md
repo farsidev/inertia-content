@@ -8,10 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- **Critical**: Fixed production build not emitting content chunk files
-- Changed approach from writing temp files to using Vite's emitFile API
-- Dynamic imports now correctly load from `/build/assets/content-{hash}.js` in production
-- Removed unnecessary temp directory approach
+- **Critical**: Completely rewrote build approach using standard Vite workflow
+- Compile Markdown to actual Vue files in `resources/js/.content-compiled/`
+- Use Vite's glob imports instead of virtual modules for reliability
+- Content chunks now properly bundled by Vite in both dev and production
+- HMR works seamlessly with real Vue files
+
+### Changed
+- **Breaking**: Switched from virtual modules to real compiled Vue files
+- Import mechanism now uses Vite glob imports (standard and reliable)
+- Simplified plugin code - removed complex virtual module handling
 
 ## [1.0.0-beta.2] - 2025-12-29
 

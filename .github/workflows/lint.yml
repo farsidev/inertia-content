@@ -1,0 +1,67 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    name: PHP Code Style
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: php-cs-fixer
+          coverage: none
+
+      - name: Run PHP CS Fixer (dry-run)
+        run: |
+          composer require --dev friendsofphp/php-cs-fixer --no-interaction
+          vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php
+        continue-on-error: true
+
+  eslint:
+    runs-on: ubuntu-latest
+    name: ESLint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: |
+          npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+          npx eslint resources/js --ext .ts,.vue
+        continue-on-error: true
+
+  markdown-lint:
+    runs-on: ubuntu-latest
+    name: Markdown Lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: articulate/actions-markdownlint@v1
+        with:
+          files: '**/*.md'
+          ignore: 'vendor node_modules'
+        continue-on-error: true

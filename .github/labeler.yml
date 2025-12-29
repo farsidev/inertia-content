@@ -1,0 +1,26 @@
+documentation:
+  - docs/**/*
+  - README.md
+  - CHANGELOG.md
+  - CONTRIBUTING.md
+
+php:
+  - src/**/*
+  - config/**/*
+  - tests/**/*.php
+
+javascript:
+  - resources/js/**/*
+  - tsconfig.json
+  - tsup.config.ts
+
+dependencies:
+  - composer.json
+  - composer.lock
+
+tests:
+  - tests/**/*
+  - phpunit.xml
+
+github-actions:
+  - .github/workflows/**/*

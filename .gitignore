@@ -1,0 +1,17 @@
+vendor/
+node_modules/
+dist/
+build/
+*.cache
+.phpunit.result.cache
+composer.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.DS_Store
+.idea/
+.vscode/
+*.log
+.env
+.env.backup
+.phpunit.cache

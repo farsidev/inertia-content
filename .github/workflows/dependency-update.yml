@@ -1,0 +1,67 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at midnight
+  workflow_dispatch:
+
+jobs:
+  composer-update:
+    runs-on: ubuntu-latest
+    name: Update Composer Dependencies
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Update Composer dependencies
+        run: composer update --prefer-stable
+
+      - name: Run tests
+        run: vendor/bin/pest
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update composer dependencies'
+          title: 'chore: Update Composer Dependencies'
+          body: 'Automated Composer dependency update'
+          branch: composer-updates
+          delete-branch: true
+
+  npm-update:
+    runs-on: ubuntu-latest
+    name: Update NPM Dependencies
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update NPM dependencies
+        run: |
+          npm update
+          npm audit fix || true
+
+      - name: Run tests
+        run: npm test
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update npm dependencies'
+          title: 'chore: Update NPM Dependencies'
+          body: 'Automated NPM dependency update'
+          branch: npm-updates
+          delete-branch: true

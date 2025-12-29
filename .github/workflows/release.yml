@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate tag format
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          if [[ ! $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid tag format: $TAG"
+            echo "Expected format: v1.0.0"
+            exit 1
+          fi
+          echo "✅ Valid tag: $TAG"
+
+      - name: Check CHANGELOG.md updated
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          if grep -q "## \[$VERSION\]" CHANGELOG.md; then
+            echo "✅ CHANGELOG.md contains version $VERSION"
+          else
+            echo "❌ CHANGELOG.md doesn't contain version $VERSION"
+            exit 1
+          fi
+
+  test:
+    needs: validate
+    runs-on: ubuntu-latest
+    name: Run Tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run PHP tests
+        run: vendor/bin/pest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run TypeScript tests
+        run: npm test
+
+      - name: Build package
+        run: npm run build
+
+  create-release:
+    needs: test
+    runs-on: ubuntu-latest
+    name: Create GitHub Release
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+
+          # Extract changelog for this version
+          sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$ d' > release-notes.md
+
+          echo "Release notes:"
+          cat release-notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    needs: create-release
+    runs-on: ubuntu-latest
+    name: Notify Release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send notification
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "🎉 Release $TAG published!"
+          echo "📦 Packagist will auto-update"
+          echo "🔗 https://github.com/farsidev/inertia-content/releases/latest"

@@ -16,5 +16,9 @@ pnpm-lock.yaml
 .env.backup
 .phpunit.cache
 
+# Vite temporary files
+.vite/
+.vite-inertia-content/
+
 # Keep node_modules in resources/js for package dependencies
 !resources/js/node_modules/

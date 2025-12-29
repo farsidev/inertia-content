@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed critical bug where virtual modules weren't emitted in production build
+- Content entries now written to temporary directory for production builds
+- Dynamic imports now work correctly in production mode
+
 ## [1.0.0-alpha] - 2025-12-29
 
 **Status**: Alpha release - Code complete, needs testing
 
 This is the initial alpha release of Inertia Content. The package is feature-complete but has not been tested in production environments.
+
+### Known Issues
+- ⚠️ Virtual modules don't work in production build (fixed in unreleased)
 
 ### Added
 - Initial package structure

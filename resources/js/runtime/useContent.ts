@@ -48,11 +48,23 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
         throw new Error(`Content not found: ${path}`)
       }
 
-      // Dynamically import the content component
-      const module = await import(
-        /* @vite-ignore */
-        `virtual:inertia-content/entry/${path}`
-      )
+      // In development: use virtual modules
+      // In production: use physical files from temp directory
+      let module
+      
+      if (import.meta.env.DEV) {
+        // Development: virtual modules work
+        module = await import(
+          /* @vite-ignore */
+          `virtual:inertia-content/entry/${path}`
+        )
+      } else {
+        // Production: load from physical files
+        module = await import(
+          /* @vite-ignore */
+          `/node_modules/.vite-inertia-content/${path}.vue`
+        )
+      }
 
       component.value = module.default
       meta.value = module.meta

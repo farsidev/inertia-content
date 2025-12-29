@@ -28,12 +28,14 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
   let manifest: ContentManifest
   let compiledEntries: Map<string, CompiledEntry>
   let server: ViteDevServer | undefined
+  let virtualModulesDir: string
 
   return {
     name: 'vite-plugin-inertia-content',
 
     configResolved(resolvedConfig) {
       config = resolvedConfig
+      virtualModulesDir = path.join(config.root, 'node_modules/.vite-inertia-content')
     },
 
     buildStart() {
@@ -43,6 +45,9 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
 
       if (config.command === 'build') {
         console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries`)
+        
+        // Write virtual modules to physical files for production build
+        writeVirtualModulesToDisk(compiledEntries, virtualModulesDir)
       }
     },
 
@@ -81,7 +86,42 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
         console.log(`[inertia-content] Manifest written to ${outputPath}`)
       }
     },
+
+    closeBundle() {
+      // Clean up virtual modules directory after build
+      if (config.command === 'build' && fs.existsSync(virtualModulesDir)) {
+        fs.rmSync(virtualModulesDir, { recursive: true, force: true })
+        console.log(`[inertia-content] Cleaned up temporary files`)
+      }
+    },
   }
+}
+
+/**
+ * Write virtual modules to disk for production build
+ */
+function writeVirtualModulesToDisk(
+  entries: Map<string, CompiledEntry>,
+  outputDir: string
+): void {
+  // Create output directory
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true })
+  }
+
+  // Write each compiled entry as a physical .vue file
+  for (const [contentPath, entry] of entries) {
+    const outputPath = path.join(outputDir, `${contentPath}.vue`)
+    const outputDirPath = path.dirname(outputPath)
+
+    if (!fs.existsSync(outputDirPath)) {
+      fs.mkdirSync(outputDirPath, { recursive: true })
+    }
+
+    fs.writeFileSync(outputPath, entry.vueComponent)
+  }
+
+  console.log(`[inertia-content] Written ${entries.size} virtual modules to ${outputDir}`)
 }
 
 /**

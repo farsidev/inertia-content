@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.6] - 2025-12-29
+
+**Release Candidate 6** - Production content loading fixed
+
+### Fixed
+- **Critical**: Don't delete compiled files after build - they're needed for glob imports
+- Fixed useContent to work correctly with glob imports in production
+- Fixed Page.vue template slots to properly render content component
+- Fixed date display to use actual _updatedAt from meta
+- Fixed TOC to show nested headings (H2 → H3 → H4)
+
+### Changed
+- Compiled files now persist in resources/js/.content-compiled/ (required for bundling)
+- Added .gitkeep to compiled directory
+- Improved sample Page.vue template
+
 ## [1.0.0-rc.5] - 2025-12-29
 
 **Release Candidate 5** - All workflows passing

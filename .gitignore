@@ -19,8 +19,9 @@ pnpm-lock.yaml
 # Vite temporary files
 .vite/
 
-# Inertia Content compiled files (temporary)
-resources/js/.content-compiled/
+# Inertia Content compiled files (generated, but kept for Vite bundling)
+# Don't commit these, but don't delete them during build
+# resources/js/.content-compiled/
 
 # Keep node_modules in resources/js for package dependencies
 !resources/js/node_modules/

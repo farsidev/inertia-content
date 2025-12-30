@@ -31,6 +31,7 @@ const page = usePage()
                 >
                   {{ h.text }}
                 </a>
+                <!-- Nested headings -->
                 <ul v-if="h.children && h.children.length > 0" class="ml-4 mt-1 space-y-1">
                   <li v-for="child in h.children" :key="child.id">
                     <a
@@ -39,6 +40,17 @@ const page = usePage()
                     >
                       {{ child.text }}
                     </a>
+                    <!-- Level 3 nested headings -->
+                    <ul v-if="child.children && child.children.length > 0" class="ml-4 mt-1 space-y-1">
+                      <li v-for="grandchild in child.children" :key="grandchild.id">
+                        <a
+                          :href="`#${grandchild.id}`"
+                          class="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          {{ grandchild.text }}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>

@@ -76,11 +76,10 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
     },
 
     closeBundle() {
-      // Clean up compiled Vue files after build
-      if (fs.existsSync(compiledDirPath)) {
-        fs.rmSync(compiledDirPath, { recursive: true, force: true })
-        console.log(`[inertia-content] Cleaned up ${compiledDir}`)
-      }
+      // DON'T clean up - Vite needs these files for bundling
+      // The files in resources/js/.content-compiled/ should persist
+      // so that glob imports can find and bundle them
+      console.log(`[inertia-content] Build complete - ${compiledEntries.size} entries bundled`)
     },
   }
 }

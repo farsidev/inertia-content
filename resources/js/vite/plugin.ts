@@ -8,7 +8,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const VIRTUAL_MANIFEST = 'virtual:inertia-content/manifest'
-const VIRTUAL_ENTRY_PREFIX = 'virtual:inertia-content/entry/'
 
 interface CompiledEntry {
   meta: ContentEntry
@@ -18,6 +17,7 @@ interface CompiledEntry {
 
 /**
  * Vite plugin for Inertia Content
+ * Compiles Markdown to Vue components using standard Vite workflow
  */
 export default function inertiaContent(options: InertiaContentOptions = {}): Plugin {
   const contentDir = options.contentDir || 'resources/content'
@@ -28,7 +28,6 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
   let config: ResolvedConfig
   let manifest: ContentManifest
   let compiledEntries: Map<string, CompiledEntry>
-  let server: ViteDevServer | undefined
   let compiledDirPath: string
 
   return {
@@ -41,13 +40,14 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
 
     buildStart() {
       // Scan and compile all .md files
-      compiledEntries = scanAndCompile(contentDir, options, ignore)
+      const absoluteContentDir = path.resolve(config.root, contentDir)
+      compiledEntries = scanAndCompile(absoluteContentDir, options, ignore)
       manifest = generateManifest(compiledEntries)
 
-      // Write compiled Vue files to disk
-      writeCompiledFilesToDisk(compiledEntries, compiledDirPath, manifest)
+      // Write compiled Vue files to disk so Vite can bundle them
+      writeCompiledFilesToDisk(compiledEntries, compiledDirPath)
 
-      console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries`)
+      console.log(`[inertia-content] Compiled ${compiledEntries.size} content entries to ${compiledDir}`)
     },
 
     resolveId(id) {
@@ -62,9 +62,8 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
       }
     },
 
-    configureServer(devServer) {
-      server = devServer
-      setupHMR(devServer, contentDir, compiledDir, options, compiledEntries, manifest, ignore)
+    configureServer(server) {
+      setupHMR(server, contentDir, compiledDirPath, options, compiledEntries, manifest, ignore)
     },
 
     generateBundle() {
@@ -78,9 +77,9 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
 
     closeBundle() {
       // Clean up compiled Vue files after build
-      if (config.command === 'build' && fs.existsSync(compiledDirPath)) {
+      if (fs.existsSync(compiledDirPath)) {
         fs.rmSync(compiledDirPath, { recursive: true, force: true })
-        console.log(`[inertia-content] Cleaned up compiled files`)
+        console.log(`[inertia-content] Cleaned up ${compiledDir}`)
       }
     },
   }
@@ -88,11 +87,11 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
 
 /**
  * Write compiled markdown to actual Vue files on disk
+ * Vite will naturally bundle these files
  */
 function writeCompiledFilesToDisk(
   entries: Map<string, CompiledEntry>,
-  outputDir: string,
-  manifest: ContentManifest
+  outputDir: string
 ): void {
   // Clean existing directory
   if (fs.existsSync(outputDir)) {
@@ -112,8 +111,6 @@ function writeCompiledFilesToDisk(
 
     fs.writeFileSync(vueFilePath, entry.vueComponent)
   }
-
-  console.log(`[inertia-content] Written ${entries.size} Vue files to ${outputDir}`)
 }
 
 /**

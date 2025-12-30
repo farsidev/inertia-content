@@ -5,8 +5,8 @@
   "description": "Development dependencies for farsi/inertia-content (NOT published to npm)",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "echo 'No JavaScript tests yet'",
+    "test:watch": "echo 'No JavaScript tests yet'"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.0",

@@ -1,0 +1,48 @@
+{
+  "version": "test-version-123",
+  "generatedAt": 1703836800000,
+  "entries": {
+    "docs/intro": {
+      "path": "docs/intro",
+      "meta": {
+        "_id": "test-id-1",
+        "_path": "docs/intro",
+        "_slug": "intro",
+        "_dir": "docs",
+        "_file": "intro",
+        "_extension": "md",
+        "title": "Introduction",
+        "description": "Getting started",
+        "draft": false,
+        "navigation": true,
+        "_excerpt": "Welcome to the docs",
+        "_headings": [],
+        "_hash": "abc123",
+        "_createdAt": 1703836800000,
+        "_updatedAt": 1703836800000
+      },
+      "chunk": "content-abc123.js"
+    },
+    "docs/guide": {
+      "path": "docs/guide",
+      "meta": {
+        "_id": "test-id-2",
+        "_path": "docs/guide",
+        "_slug": "guide",
+        "_dir": "docs",
+        "_file": "guide",
+        "_extension": "md",
+        "title": "Guide",
+        "draft": false,
+        "navigation": true,
+        "_excerpt": "Complete guide",
+        "_headings": [],
+        "_hash": "def456",
+        "_createdAt": 1703836800000,
+        "_updatedAt": 1703836800000
+      },
+      "chunk": "content-def456.js"
+    }
+  }
+}
+

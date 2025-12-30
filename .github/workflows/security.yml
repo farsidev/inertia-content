@@ -35,7 +35,7 @@ jobs:
           node-version: 20
 
       - name: Install NPM dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run npm audit
         run: npm audit --audit-level=high

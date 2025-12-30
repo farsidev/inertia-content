@@ -62,7 +62,7 @@ jobs:
           node-version: 20
 
       - name: Install NPM dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run TypeScript tests
         run: npm test

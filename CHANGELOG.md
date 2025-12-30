@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.2] - 2025-12-29
+
+**Release Candidate 2** - Bug fixes and cleanup
+
+### Fixed
+- Fixed writeCompiledFilesToDisk function properly defined
+- Cleaned up duplicate code in plugin
+- Fixed path resolution for content directory
+- Ensured compiled files are written before Vite processes them
+
+### Improved
+- Simplified plugin code
+- Better error handling
+- Cleaner codebase
+
 ## [1.0.0-rc.1] - 2025-12-29
 
 **Release Candidate 1** - Production-ready with standard Vite workflow

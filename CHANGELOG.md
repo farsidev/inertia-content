@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.5] - 2025-12-29
+
+**Release Candidate 5** - All workflows passing
+
+### Fixed
+- Removed npm run build from TypeScript tests (not needed for source package)
+- Fixed npm test script (no JS tests yet)
+- Fixed code-quality workflow phpcs command
+- All CI/CD checks now pass
+
 ## [1.0.0-rc.4] - 2025-12-29
 
 **Release Candidate 4** - TypeScript and workflow fixes

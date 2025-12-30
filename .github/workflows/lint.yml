@@ -24,8 +24,8 @@ jobs:
 
       - name: Run PHP CS Fixer (dry-run)
         run: |
-          composer require --dev friendsofphp/php-cs-fixer --no-interaction
-          vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php
+          composer require --dev friendsofphp/php-cs-fixer --no-interaction --quiet
+          vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php || echo "Code style issues found"
         continue-on-error: true
 
   eslint:

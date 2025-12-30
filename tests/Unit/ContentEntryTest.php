@@ -69,4 +69,3 @@ test('generates inertia props', function () {
         ->and($props)->toHaveKey('contentMeta')
         ->and($props['contentKey'])->toBe('docs/intro');
 });
-

@@ -21,7 +21,7 @@ test('loads valid manifest', function () {
 
 test('throws exception for missing manifest in production', function () {
     app()->detectEnvironment(fn () => 'production');
-    
+
     $loader = new ManifestLoader('/nonexistent/manifest.json', $this->cache);
 
     $loader->load();
@@ -29,7 +29,7 @@ test('throws exception for missing manifest in production', function () {
 
 test('returns empty manifest in local environment', function () {
     app()->detectEnvironment(fn () => 'local');
-    
+
     $loader = new ManifestLoader('/nonexistent/manifest.json', $this->cache);
     $manifest = $loader->load();
 
@@ -55,4 +55,3 @@ test('checks entry existence', function () {
     expect($loader->exists('docs/intro'))->toBeTrue()
         ->and($loader->exists('nonexistent'))->toBeFalse();
 });
-

@@ -35,4 +35,3 @@ test('normalizes multiple slashes', function () {
 
     expect($path)->toBe('docs/intro/page');
 });
-

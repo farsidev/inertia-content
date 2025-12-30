@@ -34,7 +34,7 @@ export function setupHMR(
 
   watcher.on('add', async (relativePath) => {
     const filePath = path.join(absoluteContentDir, relativePath)
-    await handleFileChange(filePath, 'add', server, options, compiledEntries, manifest, contentDir)
+    await handleFileChange(filePath, 'add', server, options, compiledEntries, manifest, contentDir, compiledDir)
   })
 
   watcher.on('change', async (relativePath) => {

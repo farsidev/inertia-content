@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.3] - 2025-12-29
+
+**Release Candidate 3** - Tests and workflow fixes
+
+### Added
+- PHP unit tests for ContentEntry
+- PHP unit tests for ManifestLoader  
+- PHP unit tests for PathResolver
+- Test fixtures for manifest testing
+
+### Fixed
+- GitHub workflows now work without package-lock.json
+- Removed npm cache from all workflows
+- Changed npm ci to npm install across all workflows
+
+### Improved
+- CI/CD reliability
+- Test coverage beginning
+
 ## [1.0.0-rc.2] - 2025-12-29
 
 **Release Candidate 2** - Bug fixes and cleanup

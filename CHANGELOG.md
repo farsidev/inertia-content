@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.4] - 2025-12-29
+
+**Release Candidate 4** - TypeScript and workflow fixes
+
+### Fixed
+- TypeScript type checking errors in CI/CD
+- Added Vue type declarations (shims-vue.d.ts)
+- Fixed HMR function call arguments
+- Added missing Vue devDependencies
+
+### Improved
+- tsconfig excludes compiled content directory
+- Better TypeScript configuration
+- CI/CD workflows now pass type checking
+
 ## [1.0.0-rc.3] - 2025-12-29
 
 **Release Candidate 3** - Tests and workflow fixes

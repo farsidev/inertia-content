@@ -39,6 +39,12 @@ beforeEach(function () {
     // This is the key to ensuring the `InstallCommand` writes to our temp directory.
     $this->app->instance('path.base', getTestPath());
 
+    // --- DIAGNOSTICS ---
+    echo "\n--- beforeEach ---\n";
+    echo "getTestPath(): " . getTestPath() . "\n";
+    echo "app->basePath(): " . $this->app->basePath() . "\n";
+    // --- END DIAGNOSTICS ---
+
     // 3. The InstallCommand needs to read a source package.json to know which dependencies to add.
     // We create a dummy version of it here, inside our temp directory.
     File::put(getTestPath('source-package.json'), json_encode([
@@ -49,6 +55,12 @@ beforeEach(function () {
             'markdown-it' => '^14.0.0',
         ],
     ], JSON_PRETTY_PRINT));
+
+    // --- DIAGNOSTICS ---
+    echo "Files in test directory:\n";
+    print_r(scandir(getTestPath()));
+    echo "------------------\n";
+    // --- END DIAGNOSTICS ---
 });
 
 /**
@@ -67,8 +79,21 @@ it('updates package.json with required dependencies', function () {
         ],
     ], JSON_PRETTY_PRINT));
 
+    // --- DIAGNOSTICS ---
+    echo "\n--- it('updates package.json...') ---\n";
+    echo "Files in test directory before run:\n";
+    print_r(scandir(getTestPath()));
+    // --- END DIAGNOSTICS ---
+
     // Act: Run the install command.
     runInstallCommand()->assertExitCode(0);
+
+    // --- DIAGNOSTICS ---
+    echo "Command has been run. Checking final package.json contents:\n";
+    $finalContent = File::exists(getTestPath('package.json')) ? File::get(getTestPath('package.json')) : '!!! package.json NOT FOUND !!!';
+    echo $finalContent . "\n";
+    echo "-------------------------------------\n";
+    // --- END DIAGNOSTICS ---
 
     // Assert: Check that the dummy package.json was updated correctly.
     $packageJson = json_decode(File::get(getTestPath('package.json')), true);

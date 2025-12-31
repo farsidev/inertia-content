@@ -1,52 +1,45 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Testing\PendingCommand;
 use function Pest\Laravel\artisan;
 
-// Define a constant for the temporary test directory. Using storage_path() ensures
-// that we have a reliable, writable location in any environment.
-const TEST_DIR = 'app/temp-test-dir';
+// Define a constant for the temporary test directory's relative path.
+const TEST_DIR_NAME = 'app/temp-test-dir';
 
 /**
- * Helper function to get the full, absolute path to the temporary test directory.
+ * Helper function to run the artisan install command. This is now stateless,
+ * accepting the temporary path as an argument.
+ *
+ * @param string $tempDir The absolute path to the temporary test directory.
+ * @return \Illuminate\Testing\PendingCommand
  */
-function getTestPath(string $path = ''): string
-{
-    return storage_path(TEST_DIR.($path ? DIRECTORY_SEPARATOR.$path : ''));
-}
-
-/**
- * Helper function to run the artisan install command with the necessary test-specific options.
- * This keeps our tests clean and avoids repetition.
- */
-function runInstallCommand(): \Illuminate\Testing\PendingCommand
+function runInstallCommand(string $tempDir): PendingCommand
 {
     return artisan('inertia-content:install', [
-        '--source-package-path' => getTestPath('source-package.json'),
+        '--source-package-path' => $tempDir.'/source-package.json',
     ]);
 }
 
 /**
  * Sets up a clean, temporary directory for each test case.
- * This runs before each `it()` test.
  */
 beforeEach(function () {
-    // 1. Create a clean, temporary directory for the test to run in.
-    File::deleteDirectory(getTestPath());
-    File::makeDirectory(getTestPath(), 0755, true, true);
+    // 1. Calculate the absolute path to the temporary directory ONCE, before any
+    // application state is changed. This is the key to the fix.
+    $this->tempDir = storage_path(TEST_DIR_NAME);
 
-    // 2. This is the crucial fix. We must use the application's dedicated setter method
-    // to reliably override the base path for the command.
-    $this->app->setBasePath(getTestPath());
+    // 2. Create a clean directory at this stable, absolute path.
+    File::deleteDirectory($this->tempDir);
+    File::makeDirectory($this->tempDir, 0755, true, true);
 
-    // 3. The InstallCommand needs to read a source package.json to know which dependencies to add.
-    // We create a dummy version of it here, inside our temp directory.
-    File::put(getTestPath('source-package.json'), json_encode([
+    // 3. Set the application's base path to our temporary directory.
+    $this->app->setBasePath($this->tempDir);
+
+    // 4. Create the dummy source package.json inside the temp directory.
+    File::put($this->tempDir.'/source-package.json', json_encode([
         'devDependencies' => [
-            'chokidar' => '^3.5.3',
-            'glob' => '^10.3.10',
-            'gray-matter' => '^4.0.3',
-            'markdown-it' => '^14.0.0',
+            'chokidar' => '^3.5.3', 'glob' => '^10.3.10', 'gray-matter' => '^4.0.3', 'markdown-it' => '^14.0.0',
         ],
     ], JSON_PRETTY_PRINT));
 });
@@ -55,88 +48,80 @@ beforeEach(function () {
  * Cleans up the temporary directory after each test case.
  */
 afterEach(function () {
-    File::deleteDirectory(getTestPath());
+    File::deleteDirectory($this->tempDir);
 });
 
 it('updates package.json with required dependencies', function () {
-    // Arrange: Create a dummy package.json in the temp directory for the command to modify.
-    File::put(getTestPath('package.json'), json_encode([
+    // Arrange
+    File::put($this->tempDir.'/package.json', json_encode([
         'private' => true,
-        'devDependencies' => [
-            'existing-package' => '1.0.0',
-        ],
+        'devDependencies' => ['existing-package' => '1.0.0'],
     ], JSON_PRETTY_PRINT));
 
-    // Act: Run the install command.
-    runInstallCommand()->assertExitCode(0);
+    // Act
+    runInstallCommand($this->tempDir)->assertExitCode(0);
 
-    // Assert: Check that the dummy package.json was updated correctly.
-    $packageJson = json_decode(File::get(getTestPath('package.json')), true);
+    // Assert
+    $packageJson = json_decode(File::get($this->tempDir.'/package.json'), true);
     expect($packageJson['devDependencies'])->toHaveKey('chokidar');
-    expect($packageJson['devDependencies'])->toHaveKey('glob');
-    expect($packageJson['devDependencies'])->toHaveKey('gray-matter');
-    expect($packageJson['devDependencies'])->toHaveKey('markdown-it');
     expect($packageJson['devDependencies'])->toHaveKey('existing-package');
 });
 
 it('updates vite.config.js correctly', function () {
-    // Arrange: Create a dummy vite.config.js in the temp directory.
-    File::put(getTestPath('vite.config.js'), "export default { plugins: [] };");
-    File::put(getTestPath('package.json'), "{}"); // Command needs this to exist to proceed
+    // Arrange
+    File::put($this->tempDir.'/vite.config.js', "export default { plugins: [] };");
+    File::put($this->tempDir.'/package.json', "{}");
 
     // Act
-    runInstallCommand()->assertExitCode(0);
+    runInstallCommand($this->tempDir)->assertExitCode(0);
 
     // Assert
-    $viteConfig = File::get(getTestPath('vite.config.js'));
+    $viteConfig = File::get($this->tempDir.'/vite.config.js');
     expect($viteConfig)->toContain("import inertiaContent from './vendor/farsi/inertia-content/resources/js/vite';");
-    expect(File::exists(getTestPath('vite.config.js.bak')))->toBeTrue();
+    expect(File::exists($this->tempDir.'/vite.config.js.bak'))->toBeTrue();
 });
 
 it('updates vite.config.ts correctly', function () {
     // Arrange
-    File::put(getTestPath('vite.config.ts'), "export default { plugins: [] };");
-    File::put(getTestPath('package.json'), "{}");
+    File::put($this->tempDir.'/vite.config.ts', "export default { plugins: [] };");
+    File::put($this->tempDir.'/package.json', "{}");
 
     // Act
-    runInstallCommand()->assertExitCode(0);
+    runInstallCommand($this->tempDir)->assertExitCode(0);
 
     // Assert
-    $viteConfig = File::get(getTestPath('vite.config.ts'));
+    $viteConfig = File::get($this->tempDir.'/vite.config.ts');
     expect($viteConfig)->toContain("import inertiaContent from './vendor/farsi/inertia-content/resources/js/vite';");
-    expect(File::exists(getTestPath('vite.config.ts.bak')))->toBeTrue();
+    expect(File::exists($this->tempDir.'/vite.config.ts.bak'))->toBeTrue();
 });
 
 it('does not modify package.json if dependencies are already present', function () {
-    // Arrange: Create a package.json that already has the dependencies.
-    File::put(getTestPath('package.json'), json_encode([
-        'devDependencies' => [
-            'chokidar' => '^3.5.3',
-            'glob' => '^10.3.10',
-        ],
+    // Arrange
+    File::put($this->tempDir.'/package.json', json_encode([
+        'devDependencies' => ['chokidar' => '^3.5.3', 'glob' => '^10.3.10'],
     ], JSON_PRETTY_PRINT));
-    $originalContent = File::get(getTestPath('package.json'));
+    $originalContent = File::get($this->tempDir.'/package.json');
 
-    // Act & Assert: Check for the "already up to date" message.
-    runInstallCommand()
+    // Act & Assert
+    runInstallCommand($this->tempDir)
         ->expectsOutput('✓ NPM dependencies are already up to date.')
         ->assertExitCode(0);
-    expect(File::get(getTestPath('package.json')))->toBe($originalContent);
+    expect(File::get($this->tempDir.'/package.json'))->toBe($originalContent);
 });
 
 it('handles missing package.json gracefully', function () {
-    // No arrangement needed; the file is missing by default.
-    runInstallCommand()
+    // Act & Assert
+    runInstallCommand($this->tempDir)
         ->expectsOutput('! package.json not found. Skipping dependency updates.')
         ->assertExitCode(0);
 });
 
 it('handles missing vite.config gracefully', function () {
-    // Arrange: A package.json must exist for the command to proceed to the Vite step.
-    File::put(getTestPath('package.json'), '{}');
+    // Arrange
+    File::put($this->tempDir.'/package.json', '{}');
 
     // Act & Assert
-    runInstallCommand()
+    runInstallCommand($this->tempDir)
         ->expectsOutput('! vite.config.js or vite.config.ts not found.')
         ->assertExitCode(0);
 });

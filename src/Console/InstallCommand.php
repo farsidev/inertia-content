@@ -4,6 +4,7 @@ namespace Farsi\InertiaContent\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Farsi\InertiaContent\Support\PackageJson;
 
 class InstallCommand extends Command
 {
@@ -17,17 +18,22 @@ class InstallCommand extends Command
         $this->info('Installing Inertia Content...');
         $this->newLine();
 
-        // 1. Publish config
         $this->publishConfig();
-
-        // 2. Create content directory
         $this->createContentDirectory();
-
-        // 3. Publish stubs
         $this->publishStubs();
+        $this->updatePackageJson();
+        $this->publishViteConfig();
 
-        // 4. Display next steps
-        $this->displayNextSteps();
+        $this->newLine();
+        $this->info('Inertia Content installed successfully! 🎉');
+        $this->newLine();
+
+        $this->line('Next steps:');
+        $this->line('1. Run <fg=yellow>npm install</> to install the new JavaScript dependencies.');
+        $this->line('2. Import and merge <fg=yellow>vite.inertia-content.js</> into your main <fg=yellow>vite.config.js</>.');
+        $this->line('   <fg=gray>See https://vitejs.dev/config/#mergeconfig for details.</>');
+        $this->line('3. Add a content route to your <fg=yellow>routes/web.php</> file.');
+        $this->line('4. Run <fg=yellow>npm run dev</> to start the development server.');
 
         return self::SUCCESS;
     }
@@ -38,14 +44,12 @@ class InstallCommand extends Command
             '--tag' => 'inertia-content-config',
             '--force' => $this->option('force'),
         ]);
-
         $this->line('✓ Config published to config/inertia-content.php');
     }
 
     private function createContentDirectory(): void
     {
         $contentDir = resource_path('content');
-
         if (! File::isDirectory($contentDir)) {
             File::makeDirectory($contentDir, 0755, true);
             $this->line('✓ Content directory created at resources/content');
@@ -56,57 +60,47 @@ class InstallCommand extends Command
 
     private function publishStubs(): void
     {
-        // Publish sample content
         $this->callSilent('vendor:publish', [
             '--tag' => 'inertia-content-stubs',
             '--force' => $this->option('force'),
         ]);
-
-        // Publish sample pages
         $this->callSilent('vendor:publish', [
             '--tag' => 'inertia-content-pages',
             '--force' => $this->option('force'),
         ]);
-
-        $this->line('✓ Sample content created at resources/content/index.md');
-        $this->line('✓ Sample pages created at resources/js/Pages/Content');
+        $this->line('✓ Sample content and pages published.');
     }
 
-    private function displayNextSteps(): void
+    private function updatePackageJson(): void
     {
-        $this->newLine();
-        $this->info('Next steps:');
-        $this->newLine();
+        $packageJsonPath = base_path('package.json');
 
-        $this->line('1. Install the NPM package:');
-        $this->line('   <fg=gray>npm install farsi-inertia-content</>');
-        $this->newLine();
+        if (! File::exists($packageJsonPath)) {
+            $this->warn('Could not find package.json. Please install the JS dependency manually.');
+            return;
+        }
 
-        $this->line('2. Add the Vite plugin to your vite.config.ts:');
-        $this->newLine();
-        $this->line('   <fg=gray>import inertiaContent from \'farsi-inertia-content/vite\'</>');
-        $this->newLine();
-        $this->line('   <fg=gray>export default defineConfig({</>');
-        $this->line('   <fg=gray>  plugins: [</>');
-        $this->line('   <fg=gray>    laravel({ ... }),</>');
-        $this->line('   <fg=gray>    vue(),</>');
-        $this->line('   <fg=gray>    inertiaContent(),  // Add this</>');
-        $this->line('   <fg=gray>  ],</>');
-        $this->line('   <fg=gray>})</>');
-        $this->newLine();
+        $packages = PackageJson::read($packageJsonPath);
 
-        $this->line('3. Add a content route to routes/web.php:');
-        $this->newLine();
-        $this->line('   <fg=gray>use Farsi\InertiaContent\Facades\Content;</>');
-        $this->newLine();
-        $this->line('   <fg=gray>Route::get(\'/docs/{path?}\', function ($path = \'index\') {</>');
-        $this->line('   <fg=gray>    return Content::pageOrFail("docs/$path");</>');
-        $this->line('   <fg=gray>})->where(\'path\', \'.*\');</>');
-        $this->newLine();
+        PackageJson::addDevDependency($packages, 'inertia-content', 'file:vendor/farsi/inertia-content');
 
-        $this->line('4. Run npm install && npm run build');
-        $this->newLine();
+        PackageJson::write($packageJsonPath, $packages);
 
-        $this->info('Installation complete! 🎉');
+        $this->line('✓ <fg=yellow>inertia-content</> dependency added to package.json');
+    }
+
+    private function publishViteConfig(): void
+    {
+        $stubPath = __DIR__.'/../../stubs/vite.inertia-content.js.stub';
+        $destinationPath = base_path('vite.inertia-content.js');
+
+        if (File::exists($destinationPath) && ! $this->option('force')) {
+            $this->line('✓ Vite config stub already exists.');
+            return;
+        }
+
+        File::copy($stubPath, $destinationPath);
+
+        $this->line('✓ Vite config stub published to <fg=yellow>vite.inertia-content.js</>');
     }
 }

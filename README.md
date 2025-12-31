@@ -23,52 +23,60 @@ Traditional CMS solutions force you to pass HTML through Inertia props or parse 
 - 🔐 **Laravel-first** - Server-side access control and routing
 - 🚀 **Production-ready** - Caching, optimization, and security built-in
 
-## Installation
+## Installation & Setup
 
-Inertia Content is a **single Composer package** that includes both PHP and JavaScript code.
+Inertia Content is designed for a seamless experience. Get started in just a few steps.
 
+### 1. Install via Composer
+
+First, install the package using Composer:
 ```bash
-# 1. Install via Composer
 composer require farsi/inertia-content
-
-# 2. Install JavaScript dependencies (IMPORTANT!)
-cd vendor/farsi/inertia-content && npm install && cd -
-
-# 3. Run installer
-php artisan inertia-content:install
 ```
 
-The JavaScript/Vue components are TypeScript source files that **your Vite will compile** - no pre-built JavaScript.
+### 2. Run the Installer
 
-📖 See [How It Works](./docs/how-it-works.md) for detailed explanation.
+The installer command automates the setup process:
+```bash
+php artisan inertia-content:install
+```
+This command will:
+- Publish the configuration file (`config/inertia-content.php`).
+- Create the content directory (`resources/content`).
+- Add the JavaScript dependency to your `package.json`.
+- Create a `vite.inertia-content.js` file with the required Vite configuration.
 
-## Setup
+### 3. Install JS Dependencies
 
-### 1. Add Vite Plugin
+Next, install the new dependency using your preferred package manager:
+```bash
+npm install
+# or yarn install, pnpm install
+```
 
-Add the Vite plugin to your `vite.config.ts`:
+### 4. Configure Vite
+
+Import the generated configuration into your `vite.config.js` or `vite.config.ts` and merge it.
 
 ```typescript
-import { defineConfig } from 'vite'
+import { defineConfig, mergeConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import vue from '@vitejs/plugin-vue'
-import inertiaContent from './vendor/farsi/inertia-content/resources/js/vite'
+import inertiaContentConfig from './vite.inertia-content.js' // [!code ++]
 
-export default defineConfig({
+// Your existing Vite configuration
+const originalConfig = defineConfig({
   plugins: [
     laravel({
       input: ['resources/js/app.ts'],
       refresh: true,
     }),
     vue(),
-    inertiaContent(),
   ],
-  resolve: {
-    alias: {
-      '@inertia-content': '/vendor/farsi/inertia-content/resources/js'
-    }
-  }
 })
+
+// Merge with Inertia Content config
+export default mergeConfig(originalConfig, inertiaContentConfig) // [!code ++]
 ```
 
 ### 2. Create Content

@@ -19,7 +19,7 @@ function getTestPath(string $path = ''): string
  * Helper function to run the artisan install command with the necessary test-specific options.
  * This keeps our tests clean and avoids repetition.
  */
-function runInstallCommand(): \Illuminate\Foundation\Testing\PendingCommand
+function runInstallCommand(): \Illuminate\Testing\PendingCommand
 {
     return artisan('inertia-content:install', [
         '--source-package-path' => getTestPath('source-package.json'),

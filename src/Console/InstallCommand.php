@@ -97,7 +97,7 @@ class InstallCommand extends Command
 
     private function getPackageDependencies(): array
     {
-        $packageJsonPath = __DIR__.'/../../../package.json';
+        $packageJsonPath = __DIR__.'/../../package.json';
 
         if (! file_exists($packageJsonPath)) {
             return [];

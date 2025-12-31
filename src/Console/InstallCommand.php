@@ -10,7 +10,8 @@ use Illuminate\Support\Str;
 class InstallCommand extends Command
 {
     protected $signature = 'inertia-content:install
-                            {--force : Overwrite existing files}';
+                            {--force : Overwrite existing files}
+                            {--source-package-path= : The path to the source package.json file. For internal testing only.}';
 
     protected $description = 'Install Inertia Content package and scaffold its dependencies';
 
@@ -97,7 +98,8 @@ class InstallCommand extends Command
 
     private function getPackageDependencies(): array
     {
-        $packageJsonPath = __DIR__.'/../../package.json';
+        // For testing purposes, we can override the path to the source package.json
+        $packageJsonPath = $this->option('source-package-path') ?: __DIR__.'/../../package.json';
 
         if (! file_exists($packageJsonPath)) {
             return [];

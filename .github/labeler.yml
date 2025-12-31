@@ -1,27 +1,38 @@
 documentation:
-  - docs/**/*
-  - README.md
-  - CHANGELOG.md
-  - CONTRIBUTING.md
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**/*'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
 
 php:
-  - src/**/*
-  - config/**/*
-  - tests/**/*.php
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/*'
+      - 'config/**/*'
+      - 'tests/**/*.php'
 
 javascript:
-  - resources/js/**/*
-  - tsconfig.json
-  - tsup.config.ts
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'resources/js/**/*'
+      - 'tsconfig.json'
+      - 'tsup.config.ts'
 
 dependencies:
-  - composer.json
-  - composer.lock
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'composer.json'
+      - 'composer.lock'
 
 tests:
-  - tests/**/*
-  - phpunit.xml
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'tests/**/*'
+      - 'phpunit.xml'
 
-github-actions:
-  - .github/workflows/**/*
-
+'github-actions':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*'

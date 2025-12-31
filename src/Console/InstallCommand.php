@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farsi\InertiaContent\Console;
 
+use Farsi\InertiaContent\Support\PackageJson;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Farsi\InertiaContent\Support\PackageJson;
 
 class InstallCommand extends Command
 {
@@ -77,6 +79,7 @@ class InstallCommand extends Command
 
         if (! File::exists($packageJsonPath)) {
             $this->warn('Could not find package.json. Please install the JS dependency manually.');
+
             return;
         }
 
@@ -96,6 +99,7 @@ class InstallCommand extends Command
 
         if (File::exists($destinationPath) && ! $this->option('force')) {
             $this->line('✓ Vite config stub already exists.');
+
             return;
         }
 

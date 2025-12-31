@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farsi\InertiaContent\Support;
 
 use Illuminate\Support\Facades\File;

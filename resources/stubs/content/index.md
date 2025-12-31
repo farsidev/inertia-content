@@ -68,3 +68,4 @@ $docs = Content::query()
 ## Learn More
 
 Check out the [documentation](https://github.com/farsidev/inertia-content) to learn more about Inertia Content.
+

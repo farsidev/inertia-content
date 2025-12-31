@@ -11,3 +11,4 @@ class ContentNotFoundException extends Exception
         parent::__construct("Content not found: {$path}");
     }
 }
+

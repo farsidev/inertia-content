@@ -32,3 +32,4 @@ Add any other context or screenshots about the feature request here.
 
 **Nuxt Content Comparison**
 Does Nuxt Content have this feature? If yes, how does it work there?
+

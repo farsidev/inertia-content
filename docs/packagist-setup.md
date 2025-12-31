@@ -276,3 +276,4 @@ curl -X POST "https://packagist.org/api/update-package?username=USER&apiToken=TO
 
 **Last Updated**: December 29, 2025
 **Current Version**: v1.0.0-beta.1
+

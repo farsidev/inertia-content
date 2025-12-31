@@ -9,3 +9,4 @@ export function createHash(content: string): string {
     .update(content)
     .digest('hex')
 }
+

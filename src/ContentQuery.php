@@ -264,3 +264,4 @@ class ContentQuery
         return $entries;
     }
 }
+

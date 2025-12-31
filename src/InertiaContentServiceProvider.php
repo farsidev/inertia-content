@@ -78,3 +78,4 @@ class InertiaContentServiceProvider extends ServiceProvider
         }
     }
 }
+

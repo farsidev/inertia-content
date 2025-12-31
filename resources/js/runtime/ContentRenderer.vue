@@ -40,3 +40,4 @@ const { component, meta, headings, isLoading, error } = useContent(toRef(props, 
     </slot>
   </component>
 </template>
+

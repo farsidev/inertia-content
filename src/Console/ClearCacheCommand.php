@@ -20,3 +20,4 @@ class ClearCacheCommand extends Command
         return self::SUCCESS;
     }
 }
+

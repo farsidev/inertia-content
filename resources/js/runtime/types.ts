@@ -95,3 +95,4 @@ export interface InertiaContentOptions {
   excerpt?: ExcerptOptions
   ignore?: string[]
 }
+

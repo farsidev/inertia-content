@@ -29,3 +29,4 @@ class TestCase extends Orchestra
         config()->set('inertia-content.cache.enabled', false);
     }
 }
+

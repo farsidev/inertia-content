@@ -249,3 +249,4 @@ class ContentEntry implements ArrayAccess, JsonSerializable
         return $this->attributes;
     }
 }
+

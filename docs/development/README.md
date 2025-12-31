@@ -46,3 +46,4 @@ Internal documentation for package maintainers and contributors.
 ---
 
 **Note**: These docs are for internal use and are excluded from Composer package distribution via `.gitattributes`.
+

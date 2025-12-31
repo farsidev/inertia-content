@@ -23,3 +23,4 @@ export type {
 // Re-export manifest utilities (for advanced usage)
 // @ts-expect-error - virtual module
 export { manifest, version, getEntry, getAllPaths } from 'virtual:inertia-content/manifest'
+

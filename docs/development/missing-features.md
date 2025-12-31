@@ -306,3 +306,4 @@ Advanced features (MDC, search, multi-format) are **planned for v1.1+**.
 - [Nuxt Content](https://github.com/nuxt/content)
 - [Nuxt Content Docs](https://content.nuxt.com)
 - [Our Changelog](../../CHANGELOG.md)
+

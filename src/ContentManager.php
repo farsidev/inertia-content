@@ -151,3 +151,4 @@ class ContentManager
         return $this->loader->getVersion();
     }
 }
+

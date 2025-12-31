@@ -55,3 +55,4 @@ export function writeManifest(manifest: ContentManifest, outputPath: string): vo
   // Write formatted JSON
   fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2))
 }
+

@@ -119,3 +119,4 @@ class ManifestLoader
             && is_array($manifest['entries']);
     }
 }
+

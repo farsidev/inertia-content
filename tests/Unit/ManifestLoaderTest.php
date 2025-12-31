@@ -55,3 +55,4 @@ test('checks entry existence', function () {
     expect($loader->exists('docs/intro'))->toBeTrue()
         ->and($loader->exists('nonexistent'))->toBeFalse();
 });
+

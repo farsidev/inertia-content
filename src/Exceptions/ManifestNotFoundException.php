@@ -11,3 +11,4 @@ class ManifestNotFoundException extends Exception
         parent::__construct("Content manifest not found at: {$path}. Have you run 'npm run build'?");
     }
 }
+

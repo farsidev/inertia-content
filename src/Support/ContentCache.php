@@ -81,3 +81,4 @@ class ContentCache
         return $this->prefix.$key;
     }
 }
+

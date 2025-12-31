@@ -105,3 +105,4 @@ class ContentCollection extends Collection
         return $tree;
     }
 }
+

@@ -110,3 +110,4 @@ class InstallCommand extends Command
         $this->info('Installation complete! 🎉');
     }
 }
+

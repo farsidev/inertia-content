@@ -21,3 +21,4 @@ Route::middleware(config('inertia-content.routes.middleware', ['web']))
             return Content::pageOrFail($path);
         })->where('path', '.*');
     });
+

@@ -76,3 +76,4 @@ This is the content of my page.
 - Learn about [querying content](/docs/querying)
 - Explore [Vue components](/docs/components)
 - Understand [frontmatter options](/docs/frontmatter)
+

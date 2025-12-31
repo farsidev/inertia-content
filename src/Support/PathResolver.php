@@ -76,3 +76,4 @@ class PathResolver
         return $this->normalize(preg_replace('/\.md$/', '', $relativePath));
     }
 }
+

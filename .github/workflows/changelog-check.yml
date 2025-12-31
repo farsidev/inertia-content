@@ -24,3 +24,4 @@ jobs:
             echo "Please update CHANGELOG.md with your changes"
             exit 0  # Don't fail, just warn
           fi
+

@@ -343,3 +343,4 @@ We made smart changes for our ecosystem:
 **Last Updated**: December 2025
 **Nuxt Content Version Compared**: v3.10.0
 **Our Version**: 1.0.0 (Unreleased)
+

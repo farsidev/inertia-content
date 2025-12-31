@@ -328,3 +328,4 @@ const contentFiles = import.meta.glob('~/content/**/*.md')
 3. Verify chunks created
 4. Tag v1.0.0-beta.4
 5. Production ready! ✅
+

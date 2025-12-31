@@ -31,3 +31,4 @@ class Content extends Facade
         return 'inertia-content';
     }
 }
+

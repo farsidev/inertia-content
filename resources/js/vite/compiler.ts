@@ -232,3 +232,4 @@ export const headings = ${JSON.stringify(meta._headings, null, 2)}
 </script>
 `
 }
+

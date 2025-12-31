@@ -179,6 +179,7 @@ function createMarkdownIt(
 function buildMeta(
   filePath: string,
   contentDir: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   frontmatter: Record<string, any>,
   headings: Heading[],
   excerpt: string,
@@ -213,9 +214,6 @@ function buildMeta(
  * Generate Vue SFC from HTML
  */
 function generateVueSFC(html: string, meta: ContentEntry): string {
-  // Escape backticks in HTML
-  const escapedHtml = html.replace(/`/g, '\\`')
-
   return `<script setup lang="ts">
 defineProps<{ class?: string }>()
 </script>

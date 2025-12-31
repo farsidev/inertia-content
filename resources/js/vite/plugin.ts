@@ -1,4 +1,4 @@
-import type { Plugin, ViteDevServer, ResolvedConfig } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 import { globSync } from 'glob'
 import { compileMarkdown } from './compiler'
 import { generateManifest, writeManifest } from './manifest'
@@ -12,6 +12,7 @@ const VIRTUAL_ENTRY_PREFIX = 'virtual:inertia-content/entry/'
 
 interface CompiledEntry {
   meta: ContentEntry
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headings: any[]
   vueComponent: string
 }
@@ -27,7 +28,6 @@ export default function inertiaContent(options: InertiaContentOptions = {}): Plu
   let config: ResolvedConfig
   let manifest: ContentManifest
   let compiledEntries: Map<string, CompiledEntry>
-  let server: ViteDevServer | undefined
 
   return {
     name: 'vite-plugin-inertia-content',

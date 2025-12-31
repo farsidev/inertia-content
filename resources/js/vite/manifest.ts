@@ -5,6 +5,7 @@ import path from 'node:path'
 
 interface CompiledEntry {
   meta: ContentEntry
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headings: any[]
   vueComponent: string
 }

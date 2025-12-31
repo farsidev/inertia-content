@@ -15,6 +15,7 @@ import type { ContentEntry, Heading } from './types'
 import { manifest } from 'virtual:inertia-content/manifest'
 
 interface UseContentReturn {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ShallowRef<any | null>
   meta: Ref<ContentEntry | null>
   headings: Ref<Heading[]>
@@ -28,6 +29,7 @@ interface UseContentReturn {
  */
 export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
   const key = toRef(contentKey)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const component = shallowRef<any | null>(null)
   const meta = ref<ContentEntry | null>(null)
   const headings = ref<Heading[]>([])
@@ -72,6 +74,7 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
 
   // HMR support
   if (import.meta.hot) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     import.meta.hot.on('inertia-content:update', (data: any) => {
       if (data.path === unref(key)) {
         console.log('[inertia-content] HMR update:', data.path)
@@ -79,6 +82,7 @@ export function useContent(contentKey: MaybeRef<string>): UseContentReturn {
       }
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     import.meta.hot.on('inertia-content:remove', (data: any) => {
       if (data.path === unref(key)) {
         console.log('[inertia-content] Content removed:', data.path)

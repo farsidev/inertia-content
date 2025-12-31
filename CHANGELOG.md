@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-12-29
+
+**Stable Release** - Production Ready 🎉
+
+This is the first stable release of Inertia Content. After 6 release candidates with extensive testing and bug fixes, the package is now ready for production use.
+
+### Summary
+
+Inertia Content is a Nuxt Content-compatible content management system for Laravel + Inertia.js + Vue applications. It compiles Markdown to Vue components at build time, providing zero runtime overhead while maintaining Laravel's server-side authority.
+
+### Key Features
+
+- ✅ File-based content management with Markdown
+- ✅ Build-time compilation to Vue components
+- ✅ Nuxt Content-compatible PHP query API
+- ✅ Full TypeScript support
+- ✅ Hot Module Replacement (HMR) in development
+- ✅ Production-ready caching
+- ✅ Security-first design with path traversal protection
+- ✅ Complete documentation and examples
+
+### Compatibility
+
+- PHP: 8.1, 8.2, 8.3
+- Laravel: 10.x, 11.x, 12.x
+- Inertia.js: 1.x, 2.x
+- Vue: 3.3+
+- Node: 18+, 20+
+
+### Installation
+
+```bash
+composer require farsi/inertia-content
+```
+
+See [Installation Guide](./docs/installation.md) for complete setup instructions.
+
+### What's Included
+
+- **PHP Package**: 13 classes with full query API
+- **Vue Components**: 3 components + composables
+- **Vite Plugin**: Build-time compilation with HMR
+- **Documentation**: 12 comprehensive guides
+- **Examples**: Blog and documentation site templates
+
+### Breaking Changes
+
+None - this is the first stable release. All previous release candidates were pre-stable versions.
+
+### Migration from RC.6
+
+No migration needed - v1.0.0 is fully compatible with v1.0.0-rc.6.
+
+### Thank You
+
+Thank you to all early adopters who tested the release candidates and provided valuable feedback!
+
 ## [1.0.0-rc.6] - 2025-12-29
 
 **Release Candidate 6** - Production content loading fixed

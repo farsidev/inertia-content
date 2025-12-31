@@ -27,53 +27,32 @@ Traditional CMS solutions force you to pass HTML through Inertia props or parse 
 
 ## Installation
 
-Inertia Content is a **single Composer package** that includes both PHP and JavaScript code.
+Get up and running in minutes. The `install` command handles almost everything for you.
 
 ```bash
 # 1. Install via Composer
 composer require farsi/inertia-content
 
-# 2. Install JavaScript dependencies (IMPORTANT!)
-cd vendor/farsi/inertia-content && npm install && cd -
-
-# 3. Run installer
+# 2. Run the installer
 php artisan inertia-content:install
+
+# 3. Install NPM dependencies
+npm install
+npm run dev
 ```
 
-The JavaScript/Vue components are TypeScript source files that **your Vite will compile** - no pre-built JavaScript.
+The `inertia-content:install` command will automatically:
+- Publish the configuration file (`config/inertia-content.php`)
+- Add required NPM packages to your `package.json`
+- Add the required Vite plugin to your `vite.config.js` or `vite.config.ts`
+- Create a sample `resources/content` directory with a welcome page
+- Create a sample `resources/js/Pages/Content` Vue component
 
-📖 See [How It Works](./docs/how-it-works.md) for detailed explanation.
+📖 See [How It Works](./docs/how-it-works.md) for a detailed explanation.
 
-## Setup
+## Quick Start
 
-### 1. Add Vite Plugin
-
-Add the Vite plugin to your `vite.config.ts`:
-
-```typescript
-import { defineConfig } from 'vite'
-import laravel from 'laravel-vite-plugin'
-import vue from '@vitejs/plugin-vue'
-import inertiaContent from './vendor/farsi/inertia-content/resources/js/vite'
-
-export default defineConfig({
-  plugins: [
-    laravel({
-      input: ['resources/js/app.ts'],
-      refresh: true,
-    }),
-    vue(),
-    inertiaContent(),
-  ],
-  resolve: {
-    alias: {
-      '@inertia-content': '/vendor/farsi/inertia-content/resources/js'
-    }
-  }
-})
-```
-
-### 2. Create Content
+### 1. Create Content
 
 Create markdown files in `resources/content`:
 
